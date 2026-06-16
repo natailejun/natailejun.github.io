@@ -79,103 +79,214 @@ var c=document.createElement('canvas');
 c.id='pcanvas';
 c.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;';
 if(document.body)document.body.prepend(c);else document.addEventListener('DOMContentLoaded',function(){document.body.prepend(c);});
-var ctx=c.getContext('2d'),W,H,ps=[],mx=-999,my=-999;
-var BURST=250,SETTLE=70,TRANSITION=4500;
-var target=SETTLE;
+var ctx=c.getContext('2d'),W,H,frame=0,mx=-999,my=-999,startTime=0;
+var particles=[],stars=[],dust=[];
 
-function r(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
 
-function P(x,y,vx,vy,radius,alpha,color){
-  this.x=x||Math.random()*W;
-  this.y=y||Math.random()*H;
-  this.vx=vx||(Math.random()-0.5)*0.4;
-  this.vy=vy||(Math.random()-0.5)*0.4;
-  this.r=radius||1.5+Math.random()*1.5;
-  this.alpha=alpha||0.5;
-  this.color=color||'120,87,255';
+// --- Color palette: cosmic nebula ---
+var PALETTE=[
+  [180,140,255],[160,120,255],[200,160,255],[140,180,255],
+  [220,140,240],[180,100,240],[120,160,255],[200,180,255],
+  [255,180,220],[180,220,255],[160,200,255],[220,160,220]
+];
+
+// --- Glow particle ---
+function Particle(layer){
+  this.layer=layer||'main'; // 'star' | 'main' | 'dust'
+  this.reset(true);
+}
+Particle.prototype.reset=function(init){
+  var cx=mx>0?mx:W/2,cy=my>0?my:H/2;
+  if(init){
+    this.x=Math.random()*W;
+    this.y=Math.random()*H;
+  }else{
+    this.x=cx+(Math.random()-0.5)*120;
+    this.y=cy+(Math.random()-0.5)*120;
+  }
+  var speed;
+  if(this.layer==='star'){speed=0.15+Math.random()*0.3;}
+  else if(this.layer==='dust'){speed=0.4+Math.random()*0.8;}
+  else{speed=0.2+Math.random()*0.5;}
+  var angle=Math.random()*Math.PI*2;
+  this.vx=Math.cos(angle)*speed;
+  this.vy=Math.sin(angle)*speed;
+  this.r=this.layer==='star'?0.6+Math.random()*0.8:this.layer==='dust'?2+Math.random()*2.5:1+Math.random()*1.8;
+  this.color=PALETTE[Math.floor(Math.random()*PALETTE.length)];
+  this.alpha=this.layer==='star'?0.3+Math.random()*0.4:0.15+Math.random()*0.35;
+  this.baseAlpha=this.alpha;
+  this.twinkleSpeed=0.01+Math.random()*0.03;
+  this.twinkleOffset=Math.random()*Math.PI*2;
   this.age=0;
-}
-P.prototype.update=function(dt){
+};
+
+Particle.prototype.update=function(dt){
   this.age+=dt;
+  // Mouse interaction
   var dx=this.x-mx,dy=this.y-my,dist=Math.sqrt(dx*dx+dy*dy);
-  if(dist<120){
-    var force=(1-dist/120)*0.8;
-    this.vx+=dx/dist*force*0.02*dt;
-    this.vy+=dy/dist*force*0.02*dt;
+  if(dist<150&&mx>0){
+    var force=(1-dist/150)*(this.layer==='star'?0.3:1.2);
+    this.vx+=dx/dist*force*0.015*dt;
+    this.vy+=dy/dist*force*0.015*dt;
   }
-  var speed=Math.sqrt(this.vx*this.vx+this.vy*this.vy);
-  var maxSpeed=target===SETTLE?0.6:2.5;
-  if(speed>maxSpeed){this.vx=this.vx/speed*maxSpeed;this.vy=this.vy/speed*maxSpeed;}
-  if(speed<0.05&&target===SETTLE){this.vx+=(Math.random()-0.5)*0.02;this.vy+=(Math.random()-0.5)*0.02;}
-  this.x+=this.vx*dt*0.06;this.y+=this.vy*dt*0.06;
-  if(this.x<-30)this.x=W+30;if(this.x>W+30)this.x=-30;
-  if(this.y<-30)this.y=H+30;if(this.y>H+30)this.y=-30;
-};
-P.prototype.draw=function(){
-  ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
-  ctx.fillStyle='rgba('+this.color+','+this.alpha+')';ctx.fill();
+  // Speed limit
+  var s=Math.sqrt(this.vx*this.vx+this.vy*this.vy);
+  var max=this.layer==='star'?1.2:this.layer==='dust'?3:1.8;
+  if(s>max){this.vx=this.vx/s*max;this.vy=this.vy/s*max;}
+  if(s<0.03){this.vx+=(Math.random()-0.5)*0.01;this.vy+=(Math.random()-0.5)*0.01;}
+  this.x+=this.vx*dt*0.05;this.y+=this.vy*dt*0.05;
+  if(this.x<-40)this.x=W+40;if(this.x>W+40)this.x=-40;
+  if(this.y<-40)this.y=H+40;if(this.y>H+40)this.y=-40;
+  // Twinkling
+  this.alpha=this.baseAlpha+Math.sin(frame*this.twinkleSpeed+this.twinkleOffset)*0.12;
+  this.alpha=Math.max(0.04,Math.min(0.85,this.alpha));
 };
 
+Particle.prototype.draw=function(ctx2){
+  // Glow ring
+  var glow=ctx2||ctx;
+  var r=this.r,alpha=this.alpha;
+  // Outer glow
+  var grad=glow.createRadialGradient(this.x,this.y,0,this.x,this.y,r*3);
+  grad.addColorStop(0,'rgba('+this.color+','+alpha+')');
+  grad.addColorStop(0.3,'rgba('+this.color+','+alpha*0.5+')');
+  grad.addColorStop(1,'rgba('+this.color+',0)');
+  glow.beginPath();glow.arc(this.x,this.y,r*3,0,Math.PI*2);
+  glow.fillStyle=grad;glow.fill();
+  // Core
+  glow.beginPath();glow.arc(this.x,this.y,r,0,Math.PI*2);
+  glow.fillStyle='rgba('+this.color+','+Math.min(1,alpha*1.3)+')';glow.fill();
+};
+
+// --- Burst entrance ---
 function spawnBurst(){
-  var cx=W/2,cy=H/2;
-  var colors=['140,100,255','180,130,255','100,150,255','200,100,220','120,180,255','160,80,240'];
-  for(var i=0;i<BURST;i++){
+  for(var i=0;i<200;i++){
     var angle=Math.random()*Math.PI*2;
-    var speed=2+Math.random()*8;
-    var vx=Math.cos(angle)*speed;
-    var vy=Math.sin(angle)*speed;
-    var color=colors[Math.floor(Math.random()*colors.length)];
-    ps.push(new P(cx+(Math.random()-0.5)*80,cy+(Math.random()-0.5)*80,vx,vy,1.5+Math.random()*3,0.5+Math.random()*0.45,color));
+    var dist=80+Math.random()*200;
+    var tx=W/2+Math.cos(angle)*dist;
+    var ty=H/2+Math.sin(angle)*dist;
+    var p=new Particle('main');
+    p.x=W/2+(Math.random()-0.5)*30;
+    p.y=H/2+(Math.random()-0.5)*30;
+    p.vx=(tx-p.x)*0.03;
+    p.vy=(ty-p.y)*0.03;
+    p.r=2+Math.random()*4;
+    p.alpha=0.7+Math.random()*0.3;
+    p.baseAlpha=p.alpha;
+    particles.push(p);
   }
-  target=BURST;
-  setTimeout(function(){target=SETTLE;},TRANSITION);
+  // Fade from center burst → normal after 5s
+  setTimeout(smoothSettle,4000);
 }
 
+function smoothSettle(){
+  // Gradually remove excess particles
+  var interval=setInterval(function(){
+    if(particles.length<=80){clearInterval(interval);return;}
+    // Remove 2 particles per frame until settled
+    var toRemove=Math.min(3,particles.length-80);
+    for(var i=0;i<toRemove;i++){
+      var idx=Math.floor(Math.random()*particles.length);
+      if(particles[idx]&&particles[idx].age>500){
+        particles.splice(idx,1);
+      }
+    }
+  },200);
+}
+
+// --- Connecting lines (only nearby particles) ---
 function drawLines(){
-  var maxCount=target===SETTLE?50:Math.min(ps.length,80);
-  var maxDist=target===SETTLE?140:200;
-  for(var i=0;i<maxCount;i++){
-    for(var j=i+1;j<maxCount;j++){
-      if(!ps[i]||!ps[j])continue;
-      var dx=ps[i].x-ps[j].x,dy=ps[i].y-ps[j].y;
+  var max=Math.min(particles.length,60);
+  for(var i=0;i<max;i++){
+    for(var j=i+1;j<max;j++){
+      if(!particles[i]||!particles[j])continue;
+      var dx=particles[i].x-particles[j].x;
+      var dy=particles[i].y-particles[j].y;
       var dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<maxDist){
-        var opacity=(1-dist/maxDist)*(target===SETTLE?0.25:0.5);
-        ctx.beginPath();ctx.moveTo(ps[i].x,ps[i].y);ctx.lineTo(ps[j].x,ps[j].y);
-        ctx.strokeStyle='rgba(140,100,255,'+opacity+')';ctx.lineWidth=target===SETTLE?0.4:0.8;
-        ctx.stroke();
+      var md=160;
+      if(dist<md){
+        var o=(1-dist/md)*0.2;
+        var c1=particles[i].color,c2=particles[j].color;
+        ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);
+        ctx.lineTo(particles[j].x,particles[j].y);
+        ctx.strokeStyle='rgba('+c1[0]+','+c1[1]+','+c1[2]+','+o+')';
+        ctx.lineWidth=0.3;ctx.stroke();
       }
     }
   }
 }
 
+// --- Render ---
 var lastTime=0;
-function anim(timestamp){
+function render(timestamp){
   if(!lastTime)lastTime=timestamp;
-  var dt=Math.min(timestamp-lastTime,50);
-  lastTime=timestamp;
-  ctx.clearRect(0,0,W,H);
-  // Smoothly remove excess particles
-  if(target===SETTLE&&ps.length>SETTLE){
-    ps.sort(function(a,b){return a.age-b.age;});
-    ps[0].alpha=Math.max(0,ps[0].alpha-0.02*dt*0.05);
-    if(ps[0].alpha<=0.02){ps.shift();}
-  }
-  for(var i=0;i<ps.length;i++){ps[i].update(dt);ps[i].draw();}
+  var dt=Math.min(timestamp-lastTime,40);
+  lastTime=timestamp;frame++;
+  // Soft trail effect
+  ctx.fillStyle='rgba(10,10,22,0.15)';
+  ctx.fillRect(0,0,W,H);
+  // Draw dust layer (background, slow)
+  for(var i=0;i<dust.length;i++){dust[i].update(dt);dust[i].draw();}
+  // Draw star layer
+  for(var i=0;i<stars.length;i++){stars[i].update(dt);stars[i].draw();}
+  // Draw main particles
+  for(var i=0;i<particles.length;i++){particles[i].update(dt);particles[i].draw();}
   drawLines();
-  requestAnimationFrame(anim);
+  requestAnimationFrame(render);
 }
+
+// --- Mouse trail burst ---
+var mouseTrailTimer=null;
+document.addEventListener('mousemove',function(e){
+  mx=e.clientX;my=e.clientY;
+  clearTimeout(mouseTrailTimer);
+  mouseTrailTimer=setTimeout(function(){mx=-999;my=-999;},2000);
+});
+document.addEventListener('mouseleave',function(){mx=-999;my=-999;});
+
+// Click burst
+document.addEventListener('click',function(e){
+  var cx=e.clientX,cy=e.clientY;
+  for(var i=0;i<15;i++){
+    var p=new Particle('main');
+    p.x=cx;p.y=cy;
+    var angle=Math.random()*Math.PI*2;
+    var spd=2+Math.random()*4;
+    p.vx=Math.cos(angle)*spd;
+    p.vy=Math.sin(angle)*spd;
+    p.r=2+Math.random()*3;
+    p.alpha=0.8;
+    p.baseAlpha=0.8;
+    p.color=PALETTE[Math.floor(Math.random()*PALETTE.length)];
+    particles.push(p);
+  }
+  // Cleanup after burst
+  setTimeout(function(){
+    while(particles.length>80){
+      particles.splice(Math.floor(Math.random()*particles.length),1);
+    }
+  },3000);
+});
+
+// --- Init ---
+var rt;
+window.addEventListener('resize',function(){
+  clearTimeout(rt);
+  rt=setTimeout(function(){resize();},200);
+});
 
 function init(){
-  r();
+  resize();
+  // Background stars (subtle, always present)
+  for(var i=0;i<40;i++){stars.push(new Particle('star'));}
+  // Dust layer
+  for(var i=0;i<25;i++){dust.push(new Particle('dust'));}
   spawnBurst();
-  requestAnimationFrame(anim);
+  startTime=Date.now();
+  requestAnimationFrame(render);
 }
-
-document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
-document.addEventListener('mouseleave',function(){mx=-999;my=-999;});
-var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){r();},200);});
-document.addEventListener('DOMContentLoaded',function(){init();});
+document.addEventListener('DOMContentLoaded',init);
 })();
 </script>
 </head>
