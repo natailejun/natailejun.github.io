@@ -1,0 +1,402 @@
+/* =============================================
+   自定义美化样式 - Nataile Jun's Blog
+   ============================================= */
+
+/* 全局背景 */
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  color: #333333;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background-attachment: fixed;
+}
+
+/* 顶部标题区域 - 渐变紫色背景 */
+.header-inner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-inner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('https://www.transparenttextures.com/patterns/cubes.png');
+  opacity: 0.1;
+}
+
+.site-title {
+  color: #ffffff !important;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.site-subtitle {
+  color: rgba(255,255,255,0.9) !important;
+  font-style: italic;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
+}
+
+/* 菜单样式 - 圆角药丸按钮 */
+.menu-item a {
+  color: rgba(255,255,255,0.9) !important;
+  font-size: 14px;
+  padding: 8px 16px !important;
+  border-radius: 20px !important;
+  transition: all 0.3s ease !important;
+  background: transparent !important;
+  border-bottom: none !important;
+}
+
+.menu-item a:hover {
+  background: rgba(255,255,255,0.2) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+}
+
+/* 文章卡片 - 白色圆角卡片 + 左侧渐变边框 */
+.post-block {
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.post-block::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+  border-radius: 0 4px 4px 0;
+}
+
+.post-block:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
+}
+
+/* 文章标题 - 渐变文字 */
+.post-title {
+  font-size: 1.8em;
+  font-weight: 700;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.post-title a {
+  color: transparent !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  border-bottom: none !important;
+}
+
+.post-title a:hover {
+  opacity: 0.8;
+}
+
+/* 文章元信息 */
+.post-meta {
+  color: #8b8b8b;
+  font-size: 0.9em;
+  padding: 0;
+}
+
+.post-meta-item {
+  margin-right: 12px;
+}
+
+.post-meta-item a {
+  color: #667eea !important;
+  border-bottom: none !important;
+  transition: color 0.3s ease;
+}
+
+.post-meta-item a:hover {
+  color: #764ba2 !important;
+}
+
+/* 标签样式 - 药丸标签 */
+.post-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  margin: 4px;
+  background: linear-gradient(135deg, rgba(102,126,234,0.12) 0%, rgba(118,75,162,0.12) 100%);
+  color: #667eea !important;
+  border-radius: 15px !important;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(102,126,234,0.19) !important;
+}
+
+.post-tag:hover {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff !important;
+  transform: scale(1.05);
+}
+
+/* 侧边栏样式 - 毛玻璃效果 */
+.sidebar-inner {
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  border: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.site-author-image {
+  border: 3px solid #667eea;
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+.sidebar-nav li a {
+  color: #555555 !important;
+  transition: all 0.3s ease;
+}
+
+.sidebar-nav li a:hover {
+  color: #667eea !important;
+  padding-left: 8px;
+}
+
+/* 链接样式 - 下划线动画 */
+a {
+  color: #667eea;
+  text-decoration: none;
+  border-bottom: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.3s ease;
+}
+
+a:hover::after {
+  width: 100%;
+}
+
+a:hover {
+  color: #764ba2;
+}
+
+/* 代码块样式 */
+code {
+  background: linear-gradient(135deg, rgba(102,126,234,0.06) 0%, rgba(118,75,162,0.06) 100%);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  color: #667eea;
+  border: 1px solid rgba(102,126,234,0.12);
+}
+
+pre {
+  border-radius: 12px !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* 分页器样式 */
+.pagination {
+  margin-top: 40px;
+}
+
+.page-number {
+  color: #667eea !important;
+  border: 2px solid #667eea !important;
+  border-radius: 50% !important;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.page-number:hover,
+.page-number.current {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff !important;
+  border-color: transparent !important;
+  transform: scale(1.1);
+}
+
+/* 回到顶部按钮 */
+.back-to-top {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.back-to-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+/* 阅读进度条 */
+.reading-progress-bar {
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* 文章内容排版 */
+.post-body p {
+  line-height: 1.8;
+  margin-bottom: 16px;
+}
+
+.post-body h1,
+.post-body h2,
+.post-body h3,
+.post-body h4,
+.post-body h5,
+.post-body h6 {
+  color: #1a1a1a;
+  margin-top: 2em;
+  margin-bottom: 0.8em;
+  padding-bottom: 0.4em;
+  border-bottom: 2px solid rgba(102,126,234,0.12);
+}
+
+/* 列表样式 */
+.post-body ul,
+.post-body ol {
+  padding-left: 1.2em;
+}
+
+.post-body li {
+  margin-bottom: 8px;
+  line-height: 1.7;
+}
+
+/* 引用块样式 */
+blockquote {
+  border-left: 4px solid #667eea;
+  background: linear-gradient(135deg, rgba(102,126,234,0.03) 0%, rgba(118,75,162,0.03) 100%);
+  border-radius: 0 12px 12px 0;
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+
+blockquote p {
+  color: #666;
+  margin-bottom: 0;
+}
+
+/* 标签云 */
+.tag-cloud a {
+  transition: all 0.3s ease;
+  border-bottom: none !important;
+}
+
+.tag-cloud a:hover {
+  transform: scale(1.1);
+  display: inline-block;
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* 页面底部 */
+.footer {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #ffffff;
+  padding: 20px 0;
+}
+
+.footer a {
+  color: rgba(255,255,255,0.9) !important;
+}
+
+.footer a:hover {
+  color: #ffffff !important;
+}
+
+/* 文章导航 */
+.post-nav {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid rgba(102,126,234,0.12);
+}
+
+.post-nav-item a {
+  transition: all 0.3s ease;
+}
+
+.post-nav-item a:hover {
+  color: #667eea !important;
+}
+
+/* 淡入动画 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.post-block {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* 响应式优化 */
+@media (max-width: 767px) {
+  .post-block {
+    padding: 20px;
+    margin: 10px;
+    border-radius: 12px;
+  }
+
+  .header-inner {
+    padding: 20px 0;
+  }
+}
