@@ -1,79 +1,268 @@
 /* =============================================
-   安全的自定义美化 - 不影响布局
+   粒子背景 & 视觉美化
    ============================================= */
 
-/* 1. 页面背景 - 渐变 */
-body {
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%) !important;
+/* 粒子 canvas 置于最底层 */
+#particles-canvas {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
 }
 
-/* 2. 顶部标题区域 - 紫色渐变 */
+/* 主内容区浮在粒子上方 */
+body {
+  background: #0f0f1a !important;
+  position: relative;
+}
+
+.main,
+.header,
+.footer,
+.post-block,
+.pagination,
+.comments {
+  position: relative;
+  z-index: 1;
+}
+
+/* 页面整体容器半透明玻璃效果 */
+.main-inner {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(2px);
+  border-radius: 16px;
+  padding: 20px 0;
+}
+
+/* 顶栏 - 深色渐变 */
 .header-inner {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.25) 0%, rgba(118, 75, 162, 0.25) 100%) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px !important;
+  overflow: hidden;
 }
 
 .site-title,
 .site-title a {
-  color: #ffffff !important;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.2) !important;
+  color: #e8e8f0 !important;
+  text-shadow: 0 0 20px rgba(120, 100, 255, 0.5) !important;
 }
 
 .site-subtitle {
-  color: rgba(255,255,255,0.9) !important;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.15) !important;
+  color: rgba(200, 200, 230, 0.8) !important;
 }
 
-/* 3. 文章标题 - 渐变色 */
+/* 文章卡片 - 玻璃效果 */
+.post-block {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  margin-bottom: 20px !important;
+  transition: all 0.3s ease;
+}
+
+.post-block:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(120, 100, 255, 0.2) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* 文章标题 */
 .post-title,
 .post-title a {
-  color: #667eea !important;
+  color: #c8c8e8 !important;
+  font-weight: 700 !important;
 }
 
-/* 4. 标签 - 药丸样式 */
+.post-title a:hover {
+  color: #a78bfa !important;
+}
+
+/* 文章正文 */
+.post-body {
+  color: #c0c0d4 !important;
+}
+
+.post-body h1,
+.post-body h2,
+.post-body h3,
+.post-body h4 {
+  color: #d0d0e8 !important;
+}
+
+.post-body a {
+  color: #a78bfa !important;
+  border-bottom-color: rgba(167, 139, 250, 0.3) !important;
+}
+
+.post-body code {
+  background: rgba(120, 100, 255, 0.15) !important;
+  color: #c4b5fd !important;
+}
+
+.post-body pre {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+
+.post-body blockquote {
+  border-left: 4px solid rgba(167, 139, 250, 0.6) !important;
+  background: rgba(120, 100, 255, 0.08) !important;
+  padding: 12px 16px;
+  border-radius: 0 8px 8px 0;
+}
+
+.post-body img {
+  border-radius: 12px;
+}
+
+/* 标签 - 药丸 */
 .post-tag {
-  background: #667eea15 !important;
-  color: #667eea !important;
+  background: rgba(120, 100, 255, 0.15) !important;
+  color: #a78bfa !important;
   border-radius: 15px !important;
   padding: 4px 12px !important;
+  backdrop-filter: blur(4px);
 }
 
-/* 5. 页码 - 紫色 */
+/* 分页 */
 .page-number {
-  color: #667eea !important;
-  border-color: #667eea !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #a78bfa !important;
+  border-color: rgba(120, 100, 255, 0.2) !important;
 }
 
 .page-number:hover,
 .page-number.current {
-  background: #667eea !important;
-  color: #ffffff !important;
+  background: rgba(120, 100, 255, 0.4) !important;
+  color: #fff !important;
+  box-shadow: 0 0 16px rgba(120, 100, 255, 0.3);
 }
 
-/* 6. 阅读进度条 */
+/* 阅读进度条 */
 .reading-progress-bar {
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%) !important;
+  background: linear-gradient(90deg, #667eea 0%, #a78bfa 100%) !important;
 }
 
-/* 7. 回到顶部 */
+/* 回到顶部 */
 .back-to-top {
-  background: #667eea !important;
+  background: rgba(120, 100, 255, 0.3) !important;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* 8. 页脚 */
+/* 侧边栏 */
+.sidebar {
+  background: rgba(15, 15, 26, 0.9) !important;
+  backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-inner {
+  color: #c0c0d4 !important;
+}
+
+.site-author-name {
+  color: #d0d0e8 !important;
+}
+
+.site-description {
+  color: #9090b0 !important;
+}
+
+.site-state-item a {
+  color: #9090b0 !important;
+}
+
+.site-state-item-count {
+  color: #a78bfa !important;
+}
+
+.links-of-author-item a {
+  color: #a0a0c0 !important;
+}
+
+.links-of-author-item a:hover {
+  color: #a78bfa !important;
+}
+
+/* 导航菜单 */
+.site-nav {
+  background: rgba(15, 15, 26, 0.95) !important;
+  backdrop-filter: blur(16px);
+}
+
+.menu-item a {
+  color: #a0a0c0 !important;
+}
+
+.menu-item a:hover,
+.menu-item-active a {
+  color: #a78bfa !important;
+  background: rgba(120, 100, 255, 0.1) !important;
+}
+
+/* 页脚 */
 .footer {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: rgba(15, 15, 26, 0.7) !important;
+  backdrop-filter: blur(8px);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #707090 !important;
 }
 
 .footer a {
-  color: rgba(255,255,255,0.9) !important;
+  color: #a78bfa !important;
 }
 
-/* 9. 侧边栏头像边框 */
-.site-author-image {
-  border-color: #667eea !important;
-}
-
-/* 10. 引用块左边框 */
+/* 引用块 */
 blockquote {
-  border-left-color: #667eea !important;
+  border-left-color: #a78bfa !important;
+}
+
+/* 搜索弹窗 */
+.popup {
+  background: rgba(20, 20, 35, 0.95) !important;
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* 站点概览区域 - 保持可读 */
+.site-overview-wrap {
+  background: transparent !important;
+}
+
+/* 头像 */
+.site-author-image {
+  border-color: #a78bfa !important;
+  box-shadow: 0 0 20px rgba(120, 100, 255, 0.3);
+}
+
+/* 暗色适配链接 */
+a {
+  color: #a78bfa;
+}
+
+/* 通用文字色 */
+body {
+  color: #c0c0d4;
+}
+
+/* 文章meta信息 */
+.post-meta {
+  color: #8080a0 !important;
+}
+
+.post-meta a {
+  color: #9090b0 !important;
+}
+
+.post-meta .post-meta-item-icon {
+  color: #707090 !important;
 }
