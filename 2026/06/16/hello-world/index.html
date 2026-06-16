@@ -73,7 +73,29 @@
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
 <link rel="stylesheet" href="/css/custom.css?v=1781603504365">
-<script src="/js/particles.js" defer></script>
+
+
+<script>
+(function(){
+"use strict";
+var c=document.createElement("canvas");
+c.id="pcanvas";
+c.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;";
+document.body.prepend(c);
+var ctx=c.getContext("2d"),W,H,ps=[],mx=-999,my=-999;
+function r(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
+function P(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-0.5)*0.3;this.vy=(Math.random()-0.5)*0.3;this.r=1.8+Math.random()*1.2;}
+P.prototype.u=function(){var dx=this.x-mx,dy=this.y-my,dist=Math.sqrt(dx*dx+dy*dy);if(dist<100){var f=(1-dist/100)*0.5;this.vx+=dx/dist*f;this.vy+=dy/dist*f;}var s=Math.sqrt(this.vx*this.vx+this.vy*this.vy);if(s>1.5){this.vx=this.vx/s*1.5;this.vy=this.vy/s*1.5;}this.x+=this.vx;this.y+=this.vy;if(this.x<-20)this.x=W+20;if(this.x>W+20)this.x=-20;if(this.y<-20)this.y=H+20;if(this.y>H+20)this.y=-20;};
+P.prototype.d=function(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle="rgba(120,87,255,0.5)";ctx.fill();};
+function init(){r();ps=Array.from({length:80},function(){return new P();});}
+function lines(){for(var i=0;i<ps.length;i++){for(var j=i+1;j<ps.length;j++){var dx=ps[i].x-ps[j].x,dy=ps[i].y-ps[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<150){ctx.beginPath();ctx.moveTo(ps[i].x,ps[i].y);ctx.lineTo(ps[j].x,ps[j].y);ctx.strokeStyle="rgba(120,87,255,"+(1-dist/150)*0.4+")";ctx.lineWidth=0.6;ctx.stroke();}}}}
+function anim(){ctx.clearRect(0,0,W,H);ps.forEach(function(p){p.u();p.d();});lines();requestAnimationFrame(anim);}
+document.addEventListener("mousemove",function(e){mx=e.clientX;my=e.clientY;});
+document.addEventListener("mouseleave",function(){mx=-999;my=-999;});
+var rt;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){r();init();},200);});
+init();anim();
+})();
+</script>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
