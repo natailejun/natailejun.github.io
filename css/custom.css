@@ -12,6 +12,7 @@
   --glass-border-top: rgba(255,255,255,0.65);
   --glass-blur: blur(50px) saturate(280%) brightness(1.08);
   --glass-blur-light: blur(30px) saturate(220%) brightness(1.05);
+  --glass-blur-sidebar: blur(16px) saturate(180%) brightness(1.03);
   --glass-shadow: 0 2px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
   --glass-shadow-lg: 0 8px 40px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.05);
   --radius-xl: 24px;
@@ -275,8 +276,8 @@ header.header {
     rgba(255,255,255,0.28) 0%,
     rgba(255,255,255,0.16) 50%,
     rgba(255,255,255,0.20) 100%) !important;
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur-sidebar);
+  -webkit-backdrop-filter: var(--glass-blur-sidebar);
   border: 1px solid var(--glass-border) !important;
   border-top: 1px solid var(--glass-border-top) !important;
   border-radius: var(--radius-xl) !important;
@@ -828,8 +829,8 @@ a:hover { color: #5b21b6; }
 @media (max-width: 991px) {
   .sidebar-inner {
     background: rgba(255,255,255,0.22) !important;
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur-sidebar);
+    -webkit-backdrop-filter: var(--glass-blur-sidebar);
   }
 }
 
