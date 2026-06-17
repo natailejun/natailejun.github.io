@@ -204,7 +204,21 @@ header.header {
   -webkit-backdrop-filter: var(--glass-blur-light);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
-  padding: 7px !important;
+  padding: 10px !important;
+  width: auto !important;
+  min-width: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 搜索按钮图标 */
+.site-nav-right .toggle::before {
+  content: '\f002';
+  font-family: 'Font Awesome 6 Free', 'Font Awesome 5 Free', 'FontAwesome', sans-serif;
+  font-weight: 900;
+  font-size: 15px;
+  color: #7c3aed;
 }
 
 .toggle-line {
@@ -713,8 +727,8 @@ header.header {
   background: linear-gradient(180deg,
     rgba(255,255,255,0.30) 0%,
     rgba(255,255,255,0.16) 100%) !important;
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur-sidebar);
+  -webkit-backdrop-filter: var(--glass-blur-sidebar);
   border: 1px solid var(--glass-border) !important;
   border-top: 1px solid var(--glass-border-top) !important;
   border-radius: 50% !important;
