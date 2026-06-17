@@ -1,68 +1,77 @@
 /* =============================================
-   液态玻璃设计 — Liquid Glassmorphism
+   全局液态玻璃 — Apple Glassmorphism
+   每一层都是半透明毛玻璃，深度叠加
    ============================================= */
 
-/* ===== 全局背景 — 柔和渐变 ===== */
+/* ===== CSS 变量 — 玻璃层级 ===== */
+:root {
+  --glass-strong: rgba(255,255,255,0.72);
+  --glass-medium: rgba(255,255,255,0.55);
+  --glass-light: rgba(255,255,255,0.38);
+  --glass-subtle: rgba(255,255,255,0.22);
+  --glass-border: rgba(255,255,255,0.50);
+  --glass-border-light: rgba(255,255,255,0.35);
+  --glass-shadow: 0 8px 32px rgba(0,0,0,0.06);
+  --glass-shadow-sm: 0 4px 12px rgba(0,0,0,0.04);
+  --blur-strong: blur(28px) saturate(200%);
+  --blur-medium: blur(20px) saturate(180%);
+  --blur-light: blur(12px) saturate(160%);
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+}
+
+/* ===== 全局背景 — 丰富渐变透过玻璃 ===== */
 body {
-  background: linear-gradient(135deg, #f5f3ff 0%, #fdf2f8 25%, #ecfeff 50%, #f5f3ff 75%, #fff1f2 100%) !important;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(124,58,237,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 0%, rgba(236,72,153,0.10) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(14,165,233,0.10) 0%, transparent 50%),
+    radial-gradient(ellipse at 0% 60%, rgba(168,85,247,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 100% 40%, rgba(244,63,94,0.06) 0%, transparent 40%),
+    linear-gradient(180deg, #faf5ff 0%, #fdf2f8 20%, #f8fafc 50%, #f5f3ff 80%, #faf5ff 100%) !important;
   background-attachment: fixed;
-  background-size: 200% 200%;
-  animation: bgShift 20s ease-in-out infinite;
   color: #374151 !important;
+  min-height: 100vh;
 }
 
-@keyframes bgShift {
+/* ===== Headband 装饰线 ===== */
+.headband {
+  background: linear-gradient(90deg, #7c3aed, #a78bfa, #e879f9, #f43f5e, #0ea5e9, #7c3aed) !important;
+  background-size: 200% 100%;
+  animation: headbandShimmer 5s ease-in-out infinite;
+  height: 3px !important;
+}
+
+@keyframes headbandShimmer {
   0%, 100% { background-position: 0% 50%; }
-  25% { background-position: 100% 0%; }
-  50% { background-position: 100% 100%; }
-  75% { background-position: 0% 100%; }
+  50% { background-position: 100% 50%; }
 }
 
-/* ===== 顶部装饰光晕 ===== */
-body::before {
-  content: '';
-  position: fixed;
-  top: -200px;
-  right: -200px;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-body::after {
-  content: '';
-  position: fixed;
-  bottom: -150px;
-  left: -150px;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(244, 63, 94, 0.06) 0%, transparent 70%);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ===== 顶层 header 容器 — 透明化 ===== */
+/* ===== 顶层 Header — 彻底透明 ===== */
 header.header {
   background: transparent !important;
   box-shadow: none !important;
 }
 
-/* ===== 顶栏内部 — 毛玻璃 ===== */
-.header-inner {
-  background: rgba(255, 255, 255, 0.55) !important;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+/* ===== 品牌容器 ===== */
+.site-brand-container {
+  background: transparent !important;
 }
 
+/* ===== Header 内部 — 强玻璃层 ===== */
+.header-inner {
+  background: var(--glass-strong) !important;
+  backdrop-filter: var(--blur-strong);
+  -webkit-backdrop-filter: var(--blur-strong);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--glass-shadow) !important;
+  margin-top: 8px;
+}
+
+/* 站点标题 */
 .site-title,
-.site-title a,
 .brand .site-title {
   color: #1e1b4b !important;
   font-weight: 800 !important;
@@ -74,56 +83,297 @@ header.header {
   font-weight: 500;
 }
 
-/* ===== 主容器 ===== */
+/* 站点 Meta 区域 */
+.site-meta {
+  background: transparent !important;
+}
+
+/* ===== 导航切换按钮 — 玻璃圆钮 ===== */
+.site-nav-toggle .toggle {
+  background: var(--glass-medium) !important;
+  backdrop-filter: var(--blur-light);
+  -webkit-backdrop-filter: var(--blur-light);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 8px !important;
+}
+
+.toggle-line {
+  background: #7c3aed !important;
+}
+
+/* ===== 搜索按钮 ===== */
+.site-nav-right .toggle {
+  background: var(--glass-medium) !important;
+  backdrop-filter: var(--blur-light);
+  -webkit-backdrop-filter: var(--blur-light);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+}
+
+/* ===== 导航菜单 — 独立玻璃条 ===== */
+.site-nav {
+  background: var(--glass-medium) !important;
+  backdrop-filter: var(--blur-strong);
+  -webkit-backdrop-filter: var(--blur-strong);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-md) !important;
+  margin-top: 8px;
+  padding: 6px 8px;
+  box-shadow: var(--glass-shadow-sm);
+}
+
+.main-menu.menu {
+  background: transparent !important;
+}
+
+.menu-item {
+  background: transparent !important;
+}
+
+.menu-item a {
+  color: #6b7280 !important;
+  font-weight: 500;
+  border-radius: var(--radius-sm) !important;
+  padding: 8px 14px !important;
+  transition: all 0.25s ease;
+}
+
+.menu-item a:hover {
+  color: #7c3aed !important;
+  background: rgba(124, 58, 237, 0.10) !important;
+}
+
+.menu-item-active a {
+  color: #7c3aed !important;
+  background: rgba(124, 58, 237, 0.12) !important;
+  font-weight: 700;
+}
+
+/* ===== 侧边栏 ===== */
+.sidebar {
+  background: transparent !important;
+}
+
+/* 侧边栏面板容器 */
+.sidebar-panel-container {
+  background: transparent !important;
+}
+
+/* 侧边栏内部 — 强玻璃面板 */
+.sidebar-inner {
+  background: var(--glass-strong) !important;
+  backdrop-filter: var(--blur-strong);
+  -webkit-backdrop-filter: var(--blur-strong);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--glass-shadow) !important;
+  color: #4b5563 !important;
+  margin-top: 8px;
+}
+
+/* 侧边栏导航 tabs */
+.sidebar-nav {
+  background: rgba(0,0,0,0.03) !important;
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  margin: 8px;
+}
+
+.sidebar-nav li {
+  color: #6b7280 !important;
+  font-weight: 500;
+  border-radius: 8px !important;
+  transition: all 0.25s;
+}
+
+.sidebar-nav li:hover {
+  color: #7c3aed !important;
+  background: rgba(124,58,237,0.08) !important;
+}
+
+.sidebar-toc-active .sidebar-nav-toc,
+.sidebar-overview-active .sidebar-nav-overview {
+  color: #7c3aed !important;
+  background: rgba(124,58,237,0.12) !important;
+  font-weight: 700;
+  border-radius: 8px !important;
+}
+
+/* 目录面板 */
+.post-toc-wrap.sidebar-panel {
+  background: transparent !important;
+}
+
+.post-toc {
+  background: var(--glass-medium) !important;
+  backdrop-filter: var(--blur-light);
+  -webkit-backdrop-filter: var(--blur-light);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+}
+
+.post-toc a {
+  color: #6b7280 !important;
+}
+
+.post-toc a:hover {
+  color: #7c3aed !important;
+}
+
+.post-toc .active a {
+  color: #7c3aed !important;
+  font-weight: 600;
+}
+
+/* 站点概览 */
+.site-overview-wrap {
+  background: transparent !important;
+}
+
+.site-author {
+  background: transparent !important;
+}
+
+.site-author-image {
+  border: 3px solid rgba(124,58,237,0.3) !important;
+  box-shadow: 0 0 32px rgba(124,58,237,0.2);
+  border-radius: 50%;
+  padding: 0 !important;
+}
+
+.site-author-name {
+  color: #1e1b4b !important;
+  font-weight: 700 !important;
+}
+
+.site-description {
+  color: #78716c !important;
+}
+
+/* 站点统计 */
+.site-state {
+  background: var(--glass-subtle) !important;
+  backdrop-filter: var(--blur-light);
+  -webkit-backdrop-filter: var(--blur-light);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-md);
+  padding: 8px 4px;
+}
+
+.site-state-item a {
+  color: #6b7280 !important;
+}
+
+.site-state-item-count {
+  color: #7c3aed !important;
+  font-weight: 700;
+}
+
+.site-state-item-name {
+  color: #9ca3af !important;
+}
+
+/* 作者链接 */
+.links-of-author {
+  background: var(--glass-subtle) !important;
+  backdrop-filter: var(--blur-light);
+  -webkit-backdrop-filter: var(--blur-light);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  margin-top: 8px;
+}
+
+.links-of-author-item a {
+  color: #6b7280 !important;
+  transition: color 0.2s;
+}
+
+.links-of-author-item a:hover {
+  color: #7c3aed !important;
+}
+
+/* ===== 主内容区 ===== */
 .main {
   position: relative;
   z-index: 1;
 }
 
 .main-inner {
-  background: rgba(255, 255, 255, 0.45) !important;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  border-radius: 20px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+  background: var(--glass-medium) !important;
+  backdrop-filter: var(--blur-strong);
+  -webkit-backdrop-filter: var(--blur-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--glass-shadow) !important;
+  margin-top: 8px;
 }
 
-/* ===== 文章卡片 — 匹配 main.css 的高优先级选择器 ===== */
+/* 主页特有的 posts-expand */
+.main-inner.index.posts-expand {
+  background: var(--glass-strong) !important;
+  backdrop-filter: var(--blur-strong);
+  -webkit-backdrop-filter: var(--blur-strong);
+}
+
+/* ===== 文章卡片 — 匹配 Next 高优先级选择器 ===== */
 .main-inner .post-block,
 .main-inner .sub-menu,
 .main-inner .tabs-comment,
 .main-inner > .comments,
 .main-inner .comment-position .comments,
 .main-inner .pagination {
-  background: rgba(255, 255, 255, 0.55) !important;
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03), 0 2px 2px 0 rgba(0,0,0,0.02) !important;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--glass-strong) !important;
+  backdrop-filter: var(--blur-strong);
+  -webkit-backdrop-filter: var(--blur-strong);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--glass-shadow-sm) !important;
+  transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .main-inner .post-block:hover {
-  background: rgba(255, 255, 255, 0.72) !important;
-  border-color: rgba(124, 58, 237, 0.2) !important;
-  box-shadow: 0 12px 40px rgba(124, 58, 237, 0.08), 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-  transform: translateY(-2px);
+  background: rgba(255,255,255,0.82) !important;
+  border-color: rgba(124,58,237,0.25) !important;
+  box-shadow: 0 16px 48px rgba(124,58,237,0.10), 0 4px 16px rgba(0,0,0,0.05) !important;
+  transform: translateY(-3px);
+}
+
+/* 不是第一篇文章的上边距 */
+.main-inner .post-block:not(:first-child) {
+  margin-top: 20px;
+}
+
+/* ===== 文章头部区域 ===== */
+.post-header {
+  background: transparent !important;
+}
+
+/* 文章元信息容器 */
+.post-meta-container {
+  background: var(--glass-subtle) !important;
+  backdrop-filter: var(--blur-light);
+  -webkit-backdrop-filter: var(--blur-light);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px !important;
+  margin: 12px 0;
 }
 
 /* 文章标题 */
 .post-title,
 .post-title a {
   color: #1e1b4b !important;
-  font-weight: 700 !important;
+  font-weight: 750 !important;
 }
 
 .post-title a:hover {
   color: #7c3aed !important;
 }
 
-/* 文章正文 */
+/* ===== 文章正文 ===== */
 .post-body {
   color: #4b5563 !important;
   line-height: 1.85;
@@ -141,19 +391,19 @@ header.header {
 
 .post-body h1,
 .post-body h2 {
-  border-bottom: 2px solid rgba(124, 58, 237, 0.15) !important;
+  border-bottom: 2px solid rgba(124,58,237,0.15) !important;
   padding-bottom: 8px;
 }
 
 .post-body h3 {
-  border-bottom: 2px dotted rgba(124, 58, 237, 0.12) !important;
+  border-bottom: 2px dotted rgba(124,58,237,0.12) !important;
   padding-bottom: 6px;
 }
 
 .post-body a {
   color: #7c3aed !important;
   text-decoration: none;
-  border-bottom: 1px solid rgba(124, 58, 237, 0.25);
+  border-bottom: 1px solid rgba(124,58,237,0.25);
   transition: all 0.2s;
 }
 
@@ -163,171 +413,196 @@ header.header {
 
 /* 行内代码 */
 .post-body code {
-  background: rgba(124, 58, 237, 0.08) !important;
+  background: rgba(124,58,237,0.08) !important;
   color: #7c3aed !important;
   border-radius: 6px;
   padding: 2px 8px;
   font-size: 0.9em;
+  border: 1px solid rgba(124,58,237,0.10);
 }
 
 /* 代码块 */
 .post-body pre {
-  background: rgba(30, 27, 75, 0.85) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px !important;
+  background: rgba(30,27,75,0.88) !important;
+  backdrop-filter: var(--blur-medium);
+  -webkit-backdrop-filter: var(--blur-medium);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.10);
 }
 
 .post-body pre code {
   background: transparent !important;
   color: #e2e8f0 !important;
+  border: none;
+  padding: 0;
 }
 
 /* 引用块 */
 .post-body blockquote {
   border-left: 4px solid #7c3aed !important;
-  background: rgba(124, 58, 237, 0.05) !important;
+  background: rgba(124,58,237,0.05) !important;
+  backdrop-filter: var(--blur-light);
+  -webkit-backdrop-filter: var(--blur-light);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   padding: 14px 20px;
-  border-radius: 0 12px 12px 0;
   color: #6b7280;
 }
 
 /* 图片 */
 .post-body img {
-  border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
-/* ===== 标签 — 药丸玻璃 ===== */
+/* 表格 */
+.post-body table {
+  background: var(--glass-medium) !important;
+  backdrop-filter: var(--blur-light);
+  -webkit-backdrop-filter: var(--blur-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.post-body th {
+  background: rgba(124,58,237,0.08) !important;
+  color: #1e1b4b !important;
+}
+
+.post-body td {
+  border-color: rgba(0,0,0,0.05) !important;
+}
+
+/* ===== 文章页脚 ===== */
+.post-footer {
+  background: transparent !important;
+  border-top: 1px solid rgba(0,0,0,0.04);
+  padding-top: 16px;
+  margin-top: 16px;
+}
+
+/* 标签 */
 .post-tag {
-  background: rgba(124, 58, 237, 0.08) !important;
+  background: rgba(124,58,237,0.08) !important;
   color: #7c3aed !important;
   border-radius: 20px !important;
   padding: 5px 14px !important;
   font-weight: 600;
   font-size: 13px;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: var(--blur-light);
+  -webkit-backdrop-filter: var(--blur-light);
+  border: 1px solid rgba(124,58,237,0.12);
   transition: all 0.3s;
 }
 
 .post-tag:hover {
-  background: rgba(124, 58, 237, 0.18) !important;
+  background: rgba(124,58,237,0.18) !important;
+  border-color: rgba(124,58,237,0.25);
 }
 
-/* ===== 分页 ===== */
+/* 文章分隔符 */
+.post-eof {
+  background: linear-gradient(90deg, transparent, rgba(124,58,237,0.15), transparent) !important;
+  height: 2px;
+  margin: 20px 0 0;
+}
+
+/* ===== 分页导航 ===== */
+.pagination {
+  background: var(--glass-strong) !important;
+  backdrop-filter: var(--blur-medium);
+  -webkit-backdrop-filter: var(--blur-medium);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 14px 20px !important;
+  box-shadow: var(--glass-shadow-sm);
+  margin-top: 16px !important;
+}
+
 .pagination .page-number {
-  background: rgba(255, 255, 255, 0.5) !important;
+  background: var(--glass-medium) !important;
   color: #6b7280 !important;
-  border: 1px solid rgba(0, 0, 0, 0.06) !important;
-  border-radius: 12px !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border-light) !important;
+  border-radius: var(--radius-sm) !important;
+  backdrop-filter: var(--blur-light);
+  -webkit-backdrop-filter: var(--blur-light);
+  margin: 0 3px;
   transition: all 0.3s;
 }
 
 .pagination .page-number:hover,
 .pagination .page-number.current {
-  background: rgba(124, 58, 237, 0.12) !important;
+  background: rgba(124,58,237,0.15) !important;
   color: #7c3aed !important;
-  border-color: rgba(124, 58, 237, 0.2) !important;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.1);
+  border-color: rgba(124,58,237,0.25) !important;
+  box-shadow: 0 4px 12px rgba(124,58,237,0.12);
+}
+
+.pagination .prev,
+.pagination .next {
+  background: var(--glass-medium) !important;
+  backdrop-filter: var(--blur-light);
+  -webkit-backdrop-filter: var(--blur-light);
+  border: 1px solid var(--glass-border-light);
+  border-radius: var(--radius-sm) !important;
+  color: #7c3aed !important;
+  padding: 6px 14px;
 }
 
 /* ===== 阅读进度条 ===== */
 .reading-progress-bar {
-  background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 50%, #f43f5e 100%) !important;
+  background: linear-gradient(90deg, #7c3aed, #a78bfa, #e879f9, #f43f5e) !important;
   height: 3px !important;
 }
 
-/* ===== 回到顶部 ===== */
+/* ===== 回到顶部 — 玻璃浮钮 ===== */
 .back-to-top {
-  background: rgba(255, 255, 255, 0.6) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: var(--glass-strong) !important;
+  backdrop-filter: var(--blur-medium);
+  -webkit-backdrop-filter: var(--blur-medium);
+  border: 1px solid var(--glass-border) !important;
   border-radius: 50% !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   color: #7c3aed !important;
+  width: 40px !important;
+  height: 40px !important;
+  opacity: 0.85 !important;
   transition: all 0.3s;
 }
 
 .back-to-top:hover {
-  background: rgba(124, 58, 237, 0.1) !important;
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.15);
+  background: var(--glass-strong) !important;
+  opacity: 1 !important;
+  box-shadow: 0 8px 28px rgba(124,58,237,0.18);
 }
 
-/* ===== 侧边栏 ===== */
-.sidebar {
-  background: transparent !important;
+/* ===== 侧边栏切换按钮 ===== */
+.sidebar-toggle {
+  background: var(--glass-strong) !important;
+  backdrop-filter: var(--blur-medium);
+  -webkit-backdrop-filter: var(--blur-medium);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: 50% !important;
+  box-shadow: var(--glass-shadow-sm);
+  opacity: 0.9 !important;
+  width: 32px !important;
+  height: 32px !important;
 }
 
-.sidebar-inner {
-  background: rgba(255, 255, 255, 0.5) !important;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
-  color: #4b5563 !important;
+.sidebar-toggle .toggle-line {
+  background: #7c3aed !important;
 }
 
-.site-author-name {
-  color: #1e1b4b !important;
-  font-weight: 700 !important;
+.sidebar-toggle:hover {
+  opacity: 1 !important;
+  box-shadow: 0 6px 20px rgba(124,58,237,0.15);
 }
 
-.site-description {
-  color: #78716c !important;
-}
-
-.site-state-item a {
-  color: #6b7280 !important;
-}
-
-.site-state-item-count {
-  color: #7c3aed !important;
-  font-weight: 700;
-}
-
-.links-of-author-item a {
-  color: #6b7280 !important;
-  transition: color 0.2s;
-}
-
-.links-of-author-item a:hover {
-  color: #7c3aed !important;
-}
-
-/* 头像 */
-.site-author-image {
-  border-color: #7c3aed !important;
-  box-shadow: 0 0 24px rgba(124, 58, 237, 0.2);
-  border-radius: 50%;
-}
-
-/* ===== 导航菜单 ===== */
-.site-nav {
-  background: rgba(255, 255, 255, 0.65) !important;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  margin-top: 8px;
-}
-
-.menu-item a {
-  color: #6b7280 !important;
-  font-weight: 500;
-  border-radius: 10px;
-  transition: all 0.2s;
-}
-
-.menu-item a:hover,
-.menu-item-active a {
-  color: #7c3aed !important;
-  background: rgba(124, 58, 237, 0.08) !important;
+/* 侧边栏遮罩 */
+.sidebar-dimmer {
+  background: rgba(0,0,0,0.08) !important;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 /* ===== 页脚 ===== */
@@ -336,30 +611,42 @@ header.header {
 }
 
 .footer-inner {
-  background: rgba(255, 255, 255, 0.4) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 14px;
-  padding: 16px 24px !important;
+  background: var(--glass-medium) !important;
+  backdrop-filter: var(--blur-medium);
+  -webkit-backdrop-filter: var(--blur-medium);
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 18px 28px !important;
+  margin-top: 16px;
+  box-shadow: var(--glass-shadow-sm);
   color: #9ca3af !important;
 }
 
 .footer a {
   color: #7c3aed !important;
+  font-weight: 500;
+}
+
+.copyright,
+.powered-by {
+  color: #9ca3af !important;
+}
+
+.with-love {
+  color: #f43f5e !important;
 }
 
 /* ===== 搜索弹窗 ===== */
 .popup {
-  background: rgba(255, 255, 255, 0.75) !important;
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  background: rgba(255,255,255,0.78) !important;
+  backdrop-filter: blur(32px) saturate(220%);
+  -webkit-backdrop-filter: blur(32px) saturate(220%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.10);
 }
 
-/* ===== 文章 meta 信息 ===== */
+/* ===== 文章 Meta ===== */
 .post-meta {
   color: #9ca3af !important;
 }
@@ -376,6 +663,10 @@ header.header {
   color: #a8a29e !important;
 }
 
+.post-meta-item {
+  color: #9ca3af !important;
+}
+
 /* ===== 全局链接 ===== */
 a {
   color: #7c3aed;
@@ -386,73 +677,69 @@ a:hover {
   color: #5b21b6;
 }
 
-/* ===== Headband 装饰线 ===== */
-.headband {
-  background: linear-gradient(90deg, #7c3aed, #a78bfa, #f43f5e, #0ea5e9, #7c3aed) !important;
-  background-size: 200% 100%;
-  animation: headbandShimmer 4s ease-in-out infinite;
-  height: 3px !important;
-}
-
-@keyframes headbandShimmer {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-/* ===== 侧边栏按钮 ===== */
-.sidebar-toggle {
-  background: rgba(255, 255, 255, 0.6) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  opacity: 0.9 !important;
-}
-
 /* ===== 滚动条 ===== */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(0,0,0,0.02);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(124, 58, 237, 0.2);
+  background: rgba(124,58,237,0.20);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(124, 58, 237, 0.35);
+  background: rgba(124,58,237,0.35);
 }
 
-/* ===== 站点概览 ===== */
-.site-overview-wrap {
+/* ===== Column ===== */
+.column {
   background: transparent !important;
 }
 
-/* ===== sidebar 自适应 ===== */
+/* ===== 选择文字 ===== */
+::selection {
+  background: rgba(124,58,237,0.20);
+  color: #1e1b4b;
+}
+
+/* ===== NoScript ===== */
+.noscript-warning {
+  background: var(--glass-strong) !important;
+  backdrop-filter: var(--blur-medium);
+  -webkit-backdrop-filter: var(--blur-medium);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: #374151 !important;
+}
+
+/* ===== 响应式 ===== */
 @media (max-width: 991px) {
   .sidebar-inner {
-    background: rgba(255, 255, 255, 0.75) !important;
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(255,255,255,0.82) !important;
+    backdrop-filter: var(--blur-strong);
+    -webkit-backdrop-filter: var(--blur-strong);
   }
 }
 
-/* ===== 响应式调整 ===== */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+  .header-inner {
+    border-radius: var(--radius-md) !important;
+  }
+
   .main-inner {
-    border-radius: 14px !important;
+    border-radius: var(--radius-md) !important;
   }
 
   .main-inner .post-block {
     padding: 20px !important;
-    border-radius: 14px !important;
+    border-radius: var(--radius-md) !important;
   }
 
-  .header-inner {
-    border-radius: 14px !important;
+  .footer-inner {
+    border-radius: var(--radius-md) !important;
   }
 }
