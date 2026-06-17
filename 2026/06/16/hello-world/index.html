@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.1.2">
+<meta name="theme-color" content="#f5f3ff"><meta name="generator" content="Hexo 8.1.2">
 
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
@@ -75,149 +75,7 @@
 <link rel="stylesheet" href="/css/custom.css?v=1781603504365">
 
 
-<script>
-(function(){
-'use strict';
-var c=document.createElement('canvas');
-c.id='pcanvas';
-c.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;';
-if(document.body)document.body.prepend(c);else document.addEventListener('DOMContentLoaded',function(){document.body.prepend(c);});
-var ctx=c.getContext('2d'),W,H,particles=[],mx=-999,my=-999,frame=0;
-var TOTAL=600,BURST=1000,SETTLE_DELAY=5000;
-var mouseRadius=180, mouseStrength=2.5;
-var COLOR_BASE=[140,110,240],COLOR_ACCENT=[100,160,255];
 
-function rsz(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;}
-
-function Fog(x,y,vx,vy,r,alpha,color){
-  this.x=x||Math.random()*W;
-  this.y=y||Math.random()*H;
-  this.vx=vx||(Math.random()-0.5)*0.15;
-  this.vy=vy||(Math.random()-0.5)*0.15;
-  this.homeX=this.x;this.homeY=this.y;
-  this.r=r||0.6+Math.random()*1.8;
-  this.alpha=alpha||0.12+Math.random()*0.2;
-  this.baseAlpha=this.alpha;
-  this.color=color||COLOR_BASE;
-  this.returnSpeed=0.003+Math.random()*0.008;
-}
-
-Fog.prototype.update=function(dt){
-  // Mouse repulsion - strong and smooth
-  if(mx>0){
-    var dx=this.x-mx,dy=this.y-my;
-    var dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<mouseRadius){
-      var force=Math.pow(1-dist/mouseRadius,2)*mouseStrength;
-      this.vx+=dx/dist*force*0.04*dt;
-      this.vy+=dy/dist*force*0.04*dt;
-    }
-  }
-  // Return to home position
-  this.vx+=(this.homeX-this.x)*this.returnSpeed*dt*0.05;
-  this.vy+=(this.homeY-this.y)*this.returnSpeed*dt*0.05;
-  // Damping
-  this.vx*=0.96;this.vy*=0.96;
-  // Speed cap
-  var s=Math.sqrt(this.vx*this.vx+this.vy*this.vy);
-  if(s>4){this.vx=this.vx/s*4;this.vy=this.vy/s*4;}
-  // Friction to prevent infinite drift
-  if(s<0.01&&Math.abs(this.x-this.homeX)<2&&Math.abs(this.y-this.homeY)<2){
-    this.vx+=(Math.random()-0.5)*0.03;
-    this.vy+=(Math.random()-0.5)*0.03;
-  }
-  this.x+=this.vx*dt*0.05;this.y+=this.vy*dt*0.05;
-  if(this.x<-40)this.x=W+40;if(this.x>W+40)this.x=-40;
-  if(this.y<-40)this.y=H+40;if(this.y>H+40)this.y=-40;
-  // Breathing
-  this.alpha=this.baseAlpha+Math.sin(frame*0.008+this.homeX*0.01)*0.04;
-};
-
-Fog.prototype.draw=function(){
-  var x=this.x,y=this.y,r=this.r,a=this.alpha;
-  // Soft glow blob
-  var g=ctx.createRadialGradient(x,y,0,x,y,r*4);
-  g.addColorStop(0,'rgba('+this.color+','+a+')');
-  g.addColorStop(0.4,'rgba('+this.color+','+a*0.4+')');
-  g.addColorStop(1,'rgba('+this.color+',0)');
-  ctx.beginPath();ctx.arc(x,y,r*4,0,Math.PI*2);
-  ctx.fillStyle=g;ctx.fill();
-};
-
-// --- Burst entrance ---
-function burst(){
-  for(var i=0;i<BURST;i++){
-    var ang=Math.random()*Math.PI*2;
-    var d=60+Math.random()*350;
-    var tx=W/2+Math.cos(ang)*d;
-    var ty=H/2+Math.sin(ang)*d;
-    var p=new Fog(W/2+(Math.random()-0.5)*20,H/2+(Math.random()-0.5)*20);
-    p.vx=(tx-p.x)*0.025+Math.random()*0.3;
-    p.vy=(ty-p.y)*0.025+Math.random()*0.3;
-    p.homeX=tx;p.homeY=ty;
-    p.r=0.8+Math.random()*3;
-    p.alpha=0.3+Math.random()*0.4;
-    p.baseAlpha=p.alpha;
-    p.color=Math.random()<0.3?COLOR_ACCENT:COLOR_BASE;
-    particles.push(p);
-  }
-  // Settle to fewer after delay
-  setTimeout(function(){
-    var remove=BURST-TOTAL;
-    var iv=setInterval(function(){
-      if(particles.length<=TOTAL){clearInterval(iv);return;}
-      particles.splice(Math.floor(Math.random()*particles.length),1);
-    },150);
-  },SETTLE_DELAY);
-}
-
-// --- Render ---
-var lt=0;
-function render(ts){
-  if(!lt)lt=ts;
-  var dt=Math.min(ts-lt,40);lt=ts;frame++;
-  // Soft trail
-  ctx.fillStyle='rgba(9,9,20,0.12)';
-  ctx.fillRect(0,0,W,H);
-  // Update & draw
-  for(var i=0;i<particles.length;i++){
-    particles[i].update(dt);
-    particles[i].draw();
-  }
-  requestAnimationFrame(render);
-}
-
-// --- Mouse ---
-document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
-document.addEventListener('mouseleave',function(){mx=-999;my=-999;});
-// Touch
-document.addEventListener('touchmove',function(e){
-  if(e.touches.length){mx=e.touches[0].clientX;my=e.touches[0].clientY;}
-},{passive:true});
-document.addEventListener('touchend',function(){mx=-999;my=-999;});
-
-// --- Resize ---
-var rt;
-window.addEventListener('resize',function(){
-  clearTimeout(rt);
-  rt=setTimeout(function(){
-    rsz();
-    for(var i=0;i<particles.length;i++){
-      particles[i].homeX=Math.random()*W;
-      particles[i].homeY=Math.random()*H;
-    }
-  },300);
-});
-
-// --- Init ---
-function init(){
-  rsz();
-  burst();
-  requestAnimationFrame(render);
-}
-document.addEventListener('DOMContentLoaded',init);
-})();
-</script>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
