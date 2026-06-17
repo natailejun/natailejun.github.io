@@ -9,7 +9,6 @@ body {
   background-size: 200% 200%;
   animation: bgShift 20s ease-in-out infinite;
   color: #374151 !important;
-  position: relative;
 }
 
 @keyframes bgShift {
@@ -46,7 +45,36 @@ body::after {
   z-index: 0;
 }
 
-/* ===== 主容器 — 玻璃面板 ===== */
+/* ===== 顶层 header 容器 — 透明化 ===== */
+header.header {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ===== 顶栏内部 — 毛玻璃 ===== */
+.header-inner {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+}
+
+.site-title,
+.site-title a,
+.brand .site-title {
+  color: #1e1b4b !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.5px;
+}
+
+.site-subtitle {
+  color: #78716c !important;
+  font-weight: 500;
+}
+
+/* ===== 主容器 ===== */
 .main {
   position: relative;
   z-index: 1;
@@ -58,50 +86,29 @@ body::after {
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: 20px !important;
-  padding: 28px !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.03) !important;
 }
 
-/* ===== 顶栏 — 毛玻璃导航 ===== */
-.header-inner {
-  background: rgba(255, 255, 255, 0.55) !important;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.6) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
-}
-
-.site-title,
-.site-title a {
-  color: #1e1b4b !important;
-  font-weight: 800 !important;
-  letter-spacing: -0.5px;
-}
-
-.site-subtitle {
-  color: #78716c !important;
-  font-weight: 500;
-}
-
-/* ===== 文章卡片 ===== */
-.post-block {
+/* ===== 文章卡片 — 匹配 main.css 的高优先级选择器 ===== */
+.main-inner .post-block,
+.main-inner .sub-menu,
+.main-inner .tabs-comment,
+.main-inner > .comments,
+.main-inner .comment-position .comments,
+.main-inner .pagination {
   background: rgba(255, 255, 255, 0.55) !important;
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.6) !important;
   border-radius: 16px !important;
-  padding: 28px !important;
-  margin-bottom: 20px !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03), 0 2px 2px 0 rgba(0,0,0,0.02) !important;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.post-block:hover {
-  background: rgba(255, 255, 255, 0.7) !important;
+.main-inner .post-block:hover {
+  background: rgba(255, 255, 255, 0.72) !important;
   border-color: rgba(124, 58, 237, 0.2) !important;
-  box-shadow: 0 12px 40px rgba(124, 58, 237, 0.08), 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 12px 40px rgba(124, 58, 237, 0.08), 0 2px 8px rgba(0, 0, 0, 0.05) !important;
   transform: translateY(-2px);
 }
 
@@ -132,9 +139,15 @@ body::after {
   font-weight: 700;
 }
 
+.post-body h1,
 .post-body h2 {
-  border-bottom: 2px solid rgba(124, 58, 237, 0.15);
+  border-bottom: 2px solid rgba(124, 58, 237, 0.15) !important;
   padding-bottom: 8px;
+}
+
+.post-body h3 {
+  border-bottom: 2px dotted rgba(124, 58, 237, 0.12) !important;
+  padding-bottom: 6px;
 }
 
 .post-body a {
@@ -204,7 +217,7 @@ body::after {
 }
 
 /* ===== 分页 ===== */
-.page-number {
+.pagination .page-number {
   background: rgba(255, 255, 255, 0.5) !important;
   color: #6b7280 !important;
   border: 1px solid rgba(0, 0, 0, 0.06) !important;
@@ -214,8 +227,8 @@ body::after {
   transition: all 0.3s;
 }
 
-.page-number:hover,
-.page-number.current {
+.pagination .page-number:hover,
+.pagination .page-number.current {
   background: rgba(124, 58, 237, 0.12) !important;
   color: #7c3aed !important;
   border-color: rgba(124, 58, 237, 0.2) !important;
@@ -247,14 +260,16 @@ body::after {
 
 /* ===== 侧边栏 ===== */
 .sidebar {
-  background: rgba(255, 255, 255, 0.5) !important;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-right: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.03);
+  background: transparent !important;
 }
 
 .sidebar-inner {
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
   color: #4b5563 !important;
 }
 
@@ -294,10 +309,12 @@ body::after {
 
 /* ===== 导航菜单 ===== */
 .site-nav {
-  background: rgba(255, 255, 255, 0.7) !important;
+  background: rgba(255, 255, 255, 0.65) !important;
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  margin-top: 8px;
 }
 
 .menu-item a {
@@ -315,10 +332,16 @@ body::after {
 
 /* ===== 页脚 ===== */
 .footer {
+  background: transparent !important;
+}
+
+.footer-inner {
   background: rgba(255, 255, 255, 0.4) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 14px;
+  padding: 16px 24px !important;
   color: #9ca3af !important;
 }
 
@@ -376,6 +399,16 @@ a:hover {
   50% { background-position: 100% 50%; }
 }
 
+/* ===== 侧边栏按钮 ===== */
+.sidebar-toggle {
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  opacity: 0.9 !important;
+}
+
 /* ===== 滚动条 ===== */
 ::-webkit-scrollbar {
   width: 8px;
@@ -394,14 +427,27 @@ a:hover {
   background: rgba(124, 58, 237, 0.35);
 }
 
+/* ===== 站点概览 ===== */
+.site-overview-wrap {
+  background: transparent !important;
+}
+
+/* ===== sidebar 自适应 ===== */
+@media (max-width: 991px) {
+  .sidebar-inner {
+    background: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+}
+
 /* ===== 响应式调整 ===== */
 @media (max-width: 768px) {
   .main-inner {
     border-radius: 14px !important;
-    padding: 16px !important;
   }
 
-  .post-block {
+  .main-inner .post-block {
     padding: 20px !important;
     border-radius: 14px !important;
   }
@@ -409,9 +455,4 @@ a:hover {
   .header-inner {
     border-radius: 14px !important;
   }
-}
-
-/* ===== 站点概览区域 ===== */
-.site-overview-wrap {
-  background: transparent !important;
 }
